@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+
+    // Product catalogue is readable only when published. Only trusted admins can edit it.
+    match /products/{productId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // A user may create/read their own customer profile, but cannot assign roles or admin flags.
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if signedIn() && request.auth.uid == userId
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.role == 'customer'
+        && !('isAdmin' in request.resource.data)
+        && !('admin' in request.resource.data);
+      allow update: if signedIn() && request.auth.uid == userId
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.role == resource.data.role
+        && !('isAdmin' in request.resource.data)
+        && !('admin' in request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Customers can create an order only for themselves, read their own orders,
+    // and cannot change status after creation. Admins can manage all order records.
+    match /orders/{orderId} {
+      allow create: if signedIn()
+        && request.resource.data.customerUid == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && !request.resource.data.keys().hasAny(['password', 'passwordHash', 'admin']);
+      allow read: if signedIn() && (resource.data.customerUid == request.auth.uid || isAdmin());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Deny everything not explicitly allowed above.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

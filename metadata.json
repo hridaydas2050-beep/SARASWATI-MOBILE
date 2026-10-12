@@ -1,0 +1,6 @@
+{
+  "name": "Saraswti Mobile",
+  "description": "Complete modern eCommerce mobile app for Saraswti Mobile electronics shop with products, cart, checkout, orders, offers, and admin panel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saraswti Mobile — Computer & Mobile Live Store + Admin Panel</title>
+  <style>
+    :root {
+      --blue-dark: #072A6C;
+      --blue: #0D47A1;
+      --saffron: #FF6F00;
+      --green: #1B873F;
+      --bg: #F3F6FB;
+      --card: #FFFFFF;
+      --text: #121826;
+      --muted: #5A6578;
+      --border: #DCE3F0;
+    }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+    header {
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+      color: #fff;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 18px rgba(7,42,108,0.28);
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .brand-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--saffron); display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 900;
+    }
+    .brand h1 { margin: 0; font-size: 21px; letter-spacing: 0.2px; }
+    .brand p { margin: 2px 0 0; font-size: 12px; opacity: 0.85; }
+    .search-box {
+      flex: 1; max-width: 440px; min-width: 220px;
+      display: flex; background: #fff; border-radius: 12px; overflow: hidden; padding: 4px 12px;
+    }
+    .search-box input {
+      border: none; outline: none; width: 100%; padding: 8px; font-size: 14px; color: var(--text);
+    }
+    .nav-btns { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      border: none; border-radius: 10px; padding: 9px 15px; font-weight: 700; font-size: 13px;
+      cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px;
+      text-decoration: none;
+    }
+    .btn-saffron { background: var(--saffron); color: #fff; }
+    .btn-outline { background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-blue { background: var(--blue); color: #fff; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-danger { background: #D32F2F; color: #fff; }
+    .container { max-width: 1320px; margin: 0 auto; padding: 20px 24px 60px; }
+    .banner-strip {
+      background: #FFF8E1; color: #E65100; border: 1px solid #FFE082;
+      padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 14px; margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .flash-strip {
+      background: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2;
+      padding: 10px 16px; border-radius: 12px; font-weight: 800; font-size: 14px; margin-bottom: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .hero {
+      background: linear-gradient(125deg, #072A6C, #1565C0);
+      color: #fff; border-radius: 20px; padding: 28px 32px; margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+    }
+    .hero-tag {
+      background: var(--saffron); color: #fff; padding: 4px 12px; border-radius: 50px;
+      font-size: 11px; font-weight: 800; display: inline-block; margin-bottom: 8px;
+    }
+    .hero h2 { margin: 0 0 8px; font-size: 28px; white-space: pre-line; }
+    .hero p { margin: 0; opacity: 0.9; font-size: 15px; }
+    .pills-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+    .pill {
+      background: #fff; border: 1px solid var(--border); border-radius: 50px;
+      padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text);
+    }
+    .pill.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .feature-pill {
+      background: #fff; border: 1.5px solid rgba(13,71,161,0.25); border-radius: 12px;
+      padding: 10px 16px; font-size: 13px; font-weight: 800; color: var(--blue); cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(265px, 1fr)); gap: 18px;
+    }
+    .card {
+      background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+      padding: 16px; display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .prod-img {
+      width: 100%; height: 200px; border-radius: 12px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F4F8FF 100%);
+      border: 1px solid #E4ECFA;
+      display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 12px;
+      position: relative; padding: 6px;
+    }
+    .prod-img img {
+      width: 100%; height: 100%; object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+      filter: contrast(1.03) saturate(1.04);
+    }
+    .disc-badge {
+      position: absolute; top: 8px; left: 8px; background: var(--saffron); color: #fff;
+      font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 6px;
+    }
+    .price-row { display: flex; align-items: baseline; gap: 8px; margin: 8px 0; }
+    .sell-price { font-size: 20px; font-weight: 900; color: var(--blue); }
+    .mrp-price { font-size: 13px; color: var(--muted); text-decoration: line-through; }
+    .auth-wrap {
+      max-width: 440px; margin: 48px auto; background: #fff; padding: 28px;
+      border-radius: 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.08); border: 1px solid var(--border);
+    }
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px; color: var(--muted); }
+    .field input, .field textarea, .field select {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px;
+    }
+    .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+    .toast {
+      position: fixed; bottom: 20px; right: 20px; background: #121826; color: #fff;
+      padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: none; z-index: 999;
+    }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+    th, td { padding: 11px 14px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
+    th { background: #EEF3FB; font-weight: 800; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand" onclick="showScreen('home')">
+    <div class="brand-icon">📱</div>
+    <div>
+      <h1>Saraswti Mobile (Computer & Mobile Live Store)</h1>
+      <p id="syncStatusText">🟢 Live Cloud Auto-Sync Connected with Android App</p>
+    </div>
+  </div>
+
+  <div class="search-box" id="headerSearchBox">
+    <input type="text" id="searchInput" placeholder="Search 5G mobiles, chargers, earphones, covers..." oninput="renderHome()" />
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-saffron" onclick="syncFromCloudNow(true)">🔄 Auto Sync</button>
+    <button class="btn btn-outline" id="navHomeBtn" onclick="showScreen('home')">🏠 Shop</button>
+    <button class="btn btn-outline" id="navCartBtn" onclick="showScreen('cart')">🛒 Cart (<span id="cartCount">0</span>)</button>
+    <button class="btn btn-outline" id="navOrdersBtn" onclick="showScreen('orders')">📦 Orders (<span id="ordersCount">0</span>)</button>
+    <button class="btn btn-saffron" id="navAdminBtn" style="display:inline-flex;" onclick="openComputerAdminPanel()">⚙️ Admin Panel</button>
+    <a class="btn btn-green" id="apkDownloadTopBtn" style="display:none;" download="Saraswti_Mobile.apk" href="#">⬇️ Download Android APK</a>
+    <button class="btn btn-outline" id="navLogoutBtn" style="display:none;" onclick="logoutUser()">🚪 Logout</button>
+  </div>
+</header>
+
+<div class="container">
+  <!-- MANDATORY LOGIN / REGISTER SCREEN -->
+  <div id="screen-auth" style="display:none;">
+    <div class="auth-wrap">
+      <h2 style="margin-top:0;color:var(--blue);">🔐 Welcome to Saraswti Mobile</h2>
+      <p style="font-size:13px;color:var(--muted);">Please Login or Register to open the Saraswti Mobile Store on Computer.</p>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <button class="btn btn-blue" id="tabLoginBtn" style="flex:1;justify-content:center;" onclick="switchAuthTab('login')">Login</button>
+        <button class="btn btn-outline" id="tabRegBtn" style="flex:1;justify-content:center;color:var(--blue);border-color:var(--blue);" onclick="switchAuthTab('register')">Register New User</button>
+      </div>
+
+      <div id="authLoginForm">
+        <div class="field">
+          <label>Mobile Number or Email</label>
+          <input type="text" id="loginId" placeholder="Enter 10-digit mobile or email" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="loginPw" placeholder="Enter password" />
+        </div>
+        <button class="btn btn-saffron" style="width:100%;justify-content:center;padding:12px;" onclick="handleLogin()">Login to Store</button>
+        <button class="btn btn-blue" style="width:100%;justify-content:center;padding:12px;margin-top:10px;" onclick="openComputerAdminPanel()">⚙️ Open Admin Panel Directly (Shop Owner)</button>
+      </div>
+
+      <div id="authRegForm" style="display:none;">
+        <div class="field"><label>Full Name</label><input type="text" id="regName" placeholder="Your Full Name" /></div>
+        <div class="field"><label>10-Digit Mobile Number</label><input type="text" id="regPhone" placeholder="9876543210" /></div>
+        <div class="field"><label>Email Address</label><input type="email" id="regEmail" placeholder="you@gmail.com" /></div>
+        <div class="field"><label>City / Address</label><input type="text" id="regCity" placeholder="Your City / Area" /></div>
+        <div class="field"><label>Create Password</label><input type="password" id="regPw" placeholder="Minimum 4 characters" /></div>
+        <button class="btn btn-green" style="width:100%;justify-content:center;padding:12px;" onclick="handleRegister()">Create Account & Open Store</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME STORE SCREEN -->
+  <div id="screen-home" style="display:none;">
+    <div id="liveAnnouncementBar" class="banner-strip"></div>
+    <div id="liveFlashBar" class="flash-strip"></div>
+
+    <div class="hero">
+      <div>
+        <span class="hero-tag" id="heroTagText">FESTIVE MEGA SALE</span>
+        <h2 id="heroTitleText">Latest 5G Mobiles — Up to ₹6,000 OFF</h2>
+        <p id="heroSubText">Code: MOBILE5G • No-Cost EMI • Live Computer & Mobile Sync</p>
+      </div>
+      <div>
+        <button class="btn btn-saffron" onclick="selectCategory('Mobile')">Shop 5G Mobiles →</button>
+        <button class="btn btn-green" style="margin-left:8px;" onclick="openComputerAdminPanel()">⚙️ Open Admin Panel</button>
+      </div>
+    </div>
+
+    <h3 style="margin:10px 0 8px;">✨ Saraswti Live Services & Features (Click to Book)</h3>
+    <div class="pills-row" id="liveFeaturesRow"></div>
+
+    <h3 style="margin:14px 0 8px;">📂 Electronics Categories</h3>
+    <div class="pills-row" id="categoriesRow"></div>
+
+    <div class="grid" id="productsGrid"></div>
+  </div>
+
+  <!-- CART & CHECKOUT SCREEN -->
+  <div id="screen-cart" style="display:none;">
+    <h2>🛒 Your Shopping Cart & Instant Checkout</h2>
+    <div id="cartContent"></div>
+  </div>
+
+  <!-- ORDERS SCREEN -->
+  <div id="screen-orders" style="display:none;">
+    <h2>📦 Orders & Live Service Bookings</h2>
+    <div id="ordersContent"></div>
+  </div>
+
+  <!-- ADMIN PANEL SCREEN (ONLY FOR ADMIN) -->
+  <div id="screen-admin" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+      <div>
+        <h2 style="margin:0;color:var(--blue);">⚙️ Saraswti Mobile — Computer Admin Panel</h2>
+        <p style="margin:4px 0 0;color:var(--muted);font-size:13px;">Any product, photo, price or feature you add on Computer auto-updates all Android phones in 5 seconds!</p>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-green" onclick="pushAllToCloudNow()">☁️ Sync Now to All Mobile Users</button>
+        <button class="btn btn-saffron" onclick="showScreen('home')">👁️ View Customer Shop</button>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="pill active" id="admTab0" onclick="switchAdminTab(0)">📱 Products & Photo Upload</button>
+      <button class="pill" id="admTab1" onclick="switchAdminTab(1)">📦 Live Orders</button>
+      <button class="pill" id="admTab2" onclick="switchAdminTab(2)">👥 Registered Users</button>
+      <button class="pill" id="admTab3" onclick="switchAdminTab(3)">⚙️ Live App Features & Categories</button>
+    </div>
+
+    <div id="adminTabContent0">
+      <div class="card" style="margin-bottom:18px;border:1.5px solid rgba(13,71,161,0.22);">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+          <h3 style="margin:0;color:var(--blue);">📂 Categories Add & Delete (Live Auto-Sync — বারবার ZIP ডাউনলোড করতে হবে না)</h3>
+          <button class="btn btn-blue" id="restoreDefaultCatsBtn" style="display:none;padding:6px 12px;font-size:12px;" onclick="restoreDefaultCategoriesPC()">🔄 Restore Default Categories</button>
+        </div>
+        <p style="margin:0 0 10px;font-size:12px;color:var(--muted);">📷 Image সিলেক্ট করলেই অটোমেটিক ক্যাটাগরির নাম ও ছবি Add হয়ে যাবে! অথবা নাম লিখে + Add করুন (বারবার ZIP বা APK ডাউনলোড করতে হবে না, ৫ সেকেন্ডে অটো আপডেট হবে)।</p>
+        <input type="file" id="catAutoImageFileInput" accept="image/*" style="display:none;" onchange="handleCategoryAutoImagePickPC(event)" />
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+          <button class="btn btn-blue" type="button" onclick="triggerCategoryAutoImagePickPC('')">📷 Image দিয়ে Auto Category Add করুন</button>
+          <input type="text" id="quickNewCatInput" placeholder="Or Type Category Name (e.g. Smartwatch, Pendrive, OTG)" style="flex:1;min-width:220px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;" />
+          <button class="btn btn-saffron" type="button" onclick="addCategoryInstantPC('quickNewCatInput')">➕ Add Category (Auto-Sync)</button>
+        </div>
+        <div id="adminActiveCategoriesChips" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:18px;border:1.5px solid rgba(46,125,50,0.28);">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+          <h3 style="margin:0;color:var(--green);">✨ Application Features Add & Delete (Live Auto-Sync — বারবার ZIP ডাউনলোড করতে হবে না)</h3>
+          <button class="btn btn-blue" type="button" style="padding:6px 12px;font-size:12px;" onclick="restoreDefaultFeaturesPC()">🔄 Restore Default Features</button>
+        </div>
+        <p style="margin:0 0 10px;font-size:12px;color:var(--muted);">🚀 যেকোনো নতুন অ্যাপ ফিচার (নাম লিখে বা 📷 ছবি দিয়ে) Add বা Delete করলে বারবার ZIP বা APK ডাউনলোড করতে হবে না — ৩ সেকেন্ডে সব মোবাইল ও কম্পিউটারে অটোমেটিক ফিচার যুক্ত হয়ে যাবে!</p>
+        <input type="file" id="featAutoImageFileInput" accept="image/*" style="display:none;" onchange="handleFeatureAutoImagePickPC(event)" />
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+          <button class="btn btn-blue" type="button" onclick="triggerFeatureAutoImagePickPC('')">📷 Image দিয়ে Auto App Feature Add করুন</button>
+          <input type="text" id="quickNewFeatInput" placeholder="Add New App Feature (e.g. 📡 5G SIM Activation, 🎁 Free Tempered Glass)" style="flex:1;min-width:220px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;" />
+          <button class="btn btn-saffron" type="button" onclick="addAppFeatureInstantPC('quickNewFeatInput')">➕ Add Feature (Auto-Sync)</button>
+        </div>
+        <div id="adminActiveFeaturesChips" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <h3 style="margin-top:0;color:var(--blue);" id="prodFormTitle">➕ Upload New Product / Edit Product (Auto-Syncs to Mobile App)</h3>
+        <input type="hidden" id="editProdId" value="0" />
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+          <div class="field"><label>Product Name</label><input type="text" id="pName" placeholder="e.g. Samsung Galaxy A55 5G" /></div>
+          <div class="field"><label>Brand</label><input type="text" id="pBrand" placeholder="Samsung" value="Samsung" /></div>
+          <div class="field"><label>Category (Select or Type New)</label><input type="text" id="pCat" placeholder="Mobile / Neckband / Cover" value="Mobile" /></div>
+          <div class="field"><label>MRP (₹)</label><input type="number" id="pMrp" value="15999" /></div>
+          <div class="field"><label>Selling Price (₹)</label><input type="number" id="pSell" value="12999" /></div>
+          <div class="field"><label>Stock Qty</label><input type="number" id="pStock" value="15" /></div>
+          <div class="field"><label>Offer Tag</label><input type="text" id="pTag" value="Festive Deal" /></div>
+          <div class="field"><label>Key Specs</label><input type="text" id="pSpecs" value="Fast Charging | 1 Year Warranty | Sealed Pack" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:8px;align-items:center;">
+          <div class="field">
+            <label>📷 Select Product Image from Computer (Auto-Syncs to All Users)</label>
+            <input type="file" id="pImageFile" accept="image/*" onchange="handleComputerPhotoPick(event)" />
+          </div>
+          <div class="field">
+            <label>Or Paste Direct Image URL (https://...)</label>
+            <input type="text" id="pImageUrl" placeholder="https://..." oninput="document.getElementById('pPreviewImg').src=this.value" />
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="pPreviewImg" src="" alt="Preview" style="width:72px;height:72px;border-radius:10px;object-fit:cover;background:#EBF1FA;border:1px solid var(--border);" />
+            <button class="btn btn-saffron" style="padding:12px 20px;" onclick="saveAdminProduct()">💾 Save & Auto-Publish to Mobile App</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="adminProductsTable"></div>
+    </div>
+
+    <div id="adminTabContent1" style="display:none;"></div>
+    <div id="adminTabContent2" style="display:none;"></div>
+
+    <div id="adminTabContent3" style="display:none;">
+      <div class="card">
+        <h3 style="margin-top:0;color:var(--blue);">⚙️ Live App Features & Categories (Updates Old Mobile Apps Automatically)</h3>
+        <div class="field">
+          <label><input type="checkbox" id="cfgAnnEnabled" checked /> Show Live Announcement Banner</label>
+          <input type="text" id="cfgAnnText" />
+        </div>
+        <div class="field">
+          <label><input type="checkbox" id="cfgFlashEnabled" checked /> Show 🔥 Flash Deal Banner</label>
+          <input type="text" id="cfgFlashText" />
+        </div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;margin:10px 0;">
+          <label><input type="checkbox" id="cfgRepair" checked onchange="saveAdminLiveConfig()" /> 🛠️ Mobile Repair Booking</label>
+          <label><input type="checkbox" id="cfgExchange" checked onchange="saveAdminLiveConfig()" /> 🔄 Old Phone Exchange</label>
+          <label><input type="checkbox" id="cfgEmi" checked onchange="saveAdminLiveConfig()" /> 💳 0% Downpayment EMI</label>
+        </div>
+        <div class="field">
+          <label>Active Live Application Features (Auto-Syncs Without Re-Downloading ZIP/APK)</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <button class="btn btn-blue" type="button" onclick="triggerFeatureAutoImagePickPC('')">📷 Image দিয়ে Auto Feature Add</button>
+            <input type="text" id="tab3NewFeatInput" placeholder="Add New App Feature (e.g. 📡 5G SIM Activation)" style="flex:1;min-width:200px;" />
+            <button class="btn btn-saffron" type="button" onclick="addAppFeatureInstantPC('tab3NewFeatInput')">+ Add Feature</button>
+          </div>
+          <div id="tab3FeaturesChips" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;"></div>
+          <input type="text" id="cfgFeatures" placeholder="🛠️ 30-Min Mobile Repair, 🔄 Old Phone Exchange, 📡 5G SIM Activation" />
+        </div>
+        <div class="field">
+          <label>Extra Product Categories (📷 Image দিলে অটোমেটিক Category Name অ্যাড হবে — Auto-Syncs without new ZIP/APK)</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <button class="btn btn-blue" type="button" onclick="triggerCategoryAutoImagePickPC('')">📷 Image দিয়ে Auto Category Add</button>
+            <input type="text" id="tab3NewCatInput" placeholder="Or Type Category (e.g. Smartwatch, Pendrive)" style="flex:1;min-width:200px;" />
+            <button class="btn btn-saffron" type="button" onclick="addCategoryInstantPC('tab3NewCatInput')">+ Add</button>
+          </div>
+          <div id="tab3CategoriesChips" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;"></div>
+          <input type="text" id="cfgCategories" placeholder="Smartwatch, Pendrive, OTG Cable" />
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+          <div class="field"><label>Hero Badge Tag</label><input type="text" id="cfgHeroTag" /></div>
+          <div class="field"><label>Hero Banner Title</label><input type="text" id="cfgHeroTitle" /></div>
+          <div class="field"><label>Hero Banner Subtitle</label><input type="text" id="cfgHeroSub" /></div>
+        </div>
+        <button class="btn btn-saffron" onclick="saveAdminLiveConfig()">🚀 Save & Push Live Features to All Mobile & Computer Users</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toastBox"></div>
+
+<script>
+const NTFY_SNAPSHOT_URL = "";
+const NTFY_ITEMS_URL = "";
+const STORAGE_KEY = "saraswti_pc_store_secure_v5";
+
+const DEFAULT_PRODUCTS = [];
+
+let state = {
+  currentUser: null,
+  users: [],
+  products: DEFAULT_PRODUCTS,
+  orders: [],
+  cart: [],
+  selectedCategory: "All",
+  pickedImageDataUri: "",
+  storeConfig: {
+    announcementEnabled: true,
+    announcementText: "Welcome to Saraswti Mobile",
+    enableFlashDeal: false,
+    flashDealText: "",
+    enableRepairBooking: true,
+    enablePhoneExchange: true,
+    enableEmiFeature: true,
+    customFeatures: [],
+    featureImages: {},
+    customCategories: [],
+    deletedCategories: [],
+    categoryImages: {},
+    heroTag: "WELCOME",
+    heroTitle: "Shop Electronics",
+    heroSubtitle: "Add your products and offers before launch"
+  }
+};
+
+function loadLocalState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state = { ...state, ...parsed, storeConfig: { ...state.storeConfig, ...(parsed.storeConfig || {}) } };
+    }
+  } catch (e) {}
+}
+
+function saveLocalState() {
+  try {
+    const safeState = { ...state, users: (state.users || []).map(({ password, ...u }) => u), currentUser: state.currentUser ? (({ password, ...u }) => u)(state.currentUser) : null };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(safeState));
+  } catch (e) {}
+}
+
+async function hashPassword(password) {
+  if (!globalThis.crypto || !crypto.subtle || !globalThis.TextEncoder) {
+    throw new Error("Secure password hashing is unavailable in this browser context. Open this prototype from localhost/HTTPS.");
+  }
+  const bytes = new TextEncoder().encode(password);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function showToast(msg) {
+  const el = document.getElementById("toastBox");
+  el.textContent = msg;
+  el.style.display = "block";
+  setTimeout(() => { el.style.display = "none"; }, 3500);
+}
+
+function switchAuthTab(mode) {
+  document.getElementById("authLoginForm").style.display = mode === "login" ? "block" : "none";
+  document.getElementById("authRegForm").style.display = mode === "register" ? "block" : "none";
+}
+
+async function handleLogin() {
+  const id = document.getElementById("loginId").value.trim();
+  const pw = document.getElementById("loginPw").value;
+  let digest;
+  try { digest = await hashPassword(pw); }
+  catch (e) { showToast("⚠️ " + e.message); return; }
+  const user = state.users.find(u => (u.phone === id || (u.email || "").toLowerCase() === id.toLowerCase()) && u.passwordHash === digest);
+  if (!user) {
+    showToast("❌ Invalid mobile/email or password! Please Register first.");
+    return;
+  }
+  state.currentUser = user;
+  saveLocalState();
+  updateNavVisibility();
+  showScreen("home");
+  showToast("✅ Welcome, " + user.fullName + "!");
+}
+
+async function handleRegister() {
+  const fullName = document.getElementById("regName").value.trim();
+  const phone = document.getElementById("regPhone").value.trim();
+  const email = document.getElementById("regEmail").value.trim() || (phone + "@user.in");
+  const city = document.getElementById("regCity").value.trim() || "Local";
+  const password = document.getElementById("regPw").value;
+  if (!fullName || phone.length < 10 || !password) {
+    showToast("⚠️ Please enter Name, 10-digit Mobile Number & Password");
+    return;
+  }
+  let passwordHash;
+  try { passwordHash = await hashPassword(password); }
+  catch (e) { showToast("⚠️ " + e.message); return; }
+  const newUser = { fullName, phone, email, passwordHash, city, isAdmin: false };
+  const idx = state.users.findIndex(u => u.phone === phone);
+  if (idx >= 0) state.users[idx] = newUser; else state.users.push(newUser);
+  state.currentUser = newUser;
+  saveLocalState();
+  // Local prototype only; never broadcast customer credentials or personal information.
+  updateNavVisibility();
+  showScreen("home");
+  showToast("🎉 Account created! Welcome " + fullName);
+}
+
+function logoutUser() {
+  state.currentUser = null;
+  saveLocalState();
+  updateNavVisibility();
+  showScreen("auth");
+}
+
+function openComputerAdminPanel() {
+  showToast("Admin panel is disabled until secure server-side authentication is configured.");
+}
+
+function updateNavVisibility() {
+  const loggedIn = !!state.currentUser;
+  document.getElementById("navAdminBtn").style.display = "inline-flex";
+  document.getElementById("navLogoutBtn").style.display = loggedIn ? "inline-flex" : "none";
+  document.getElementById("headerSearchBox").style.display = loggedIn ? "flex" : "none";
+  document.getElementById("cartCount").textContent = state.cart.reduce((s, i) => s + i.qty, 0);
+  document.getElementById("ordersCount").textContent = state.orders.length;
+}
+
+function showScreen(name) {
+  if (!state.currentUser) name = "auth";
+  if (name === "admin" && (!state.currentUser || !state.currentUser.isAdmin)) name = "home";
+  ["auth", "home", "cart", "orders", "admin"].forEach(s => {
+    document.getElementById("screen-" + s).style.display = (s === name) ? "block" : "none";
+  });
+  if (name === "home") renderHome();
+  if (name === "cart") renderCart();
+  if (name === "orders") renderOrders();
+  if (name === "admin") renderAdmin();
+}
+
+function selectCategory(cat) {
+  state.selectedCategory = cat;
+  renderHome();
+}
+
+function renderHome() {
+  const cfg = state.storeConfig;
+  const annBar = document.getElementById("liveAnnouncementBar");
+  annBar.style.display = (cfg.announcementEnabled && cfg.announcementText) ? "flex" : "none";
+  annBar.textContent = cfg.announcementText;
+
+  const flashBar = document.getElementById("liveFlashBar");
+  flashBar.style.display = (cfg.enableFlashDeal && cfg.flashDealText) ? "flex" : "none";
+  flashBar.textContent = cfg.flashDealText;
+
+  document.getElementById("heroTagText").textContent = cfg.heroTag || "FESTIVE MEGA SALE";
+  document.getElementById("heroTitleText").textContent = cfg.heroTitle || "Latest 5G Mobiles";
+  document.getElementById("heroSubText").textContent = cfg.heroSubtitle || "";
+
+  // Live features
+  const feats = [];
+  if (cfg.enableRepairBooking) feats.push("🛠️ 30-Min Mobile Repair");
+  if (cfg.enablePhoneExchange) feats.push("🔄 Old Phone Exchange");
+  if (cfg.enableEmiFeature) feats.push("💳 0% Downpayment EMI");
+  (cfg.customFeatures || []).forEach(f => {
+    if (f && !feats.some(x => x.toLowerCase() === f.trim().toLowerCase())) feats.push(f.trim());
+  });
+  const featImgs = cfg.featureImages || {};
+  document.getElementById("liveFeaturesRow").innerHTML = feats.map(f => {
+    const imgKey = Object.keys(featImgs).find(k => k.trim().toLowerCase() === f.trim().toLowerCase());
+    const imgUri = imgKey ? featImgs[imgKey] : "";
+    const thumbHtml = imgUri
+      ? `<img src="${imgUri}" alt="${f.replace(/"/g, "")}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;" />`
+      : "";
+    return `<div class="feature-pill" style="display:inline-flex;align-items:center;" onclick="bookLiveFeature('${f.replace(/'/g, "")}')">${thumbHtml}${f}</div>`;
+  }).join("");
+
+  // Dynamic Categories (Strict Case-Insensitive Deduplication + Deleted Category Filtering)
+  const baseCats = getEffectiveCategoriesPC();
+  const catImgs = cfg.categoryImages || {};
+
+  document.getElementById("categoriesRow").innerHTML = baseCats.map(c => {
+    const k = canonicalCatKey(c);
+    const imgKey = Object.keys(catImgs).find(x => canonicalCatKey(x) === k);
+    const imgUri = imgKey ? catImgs[imgKey] : "";
+    const thumbHtml = imgUri
+      ? `<img src="${imgUri}" alt="${c}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;" />`
+      : "";
+    return `<button class="pill ${state.selectedCategory === c ? 'active' : ''}" style="display:inline-flex;align-items:center;" onclick="selectCategory('${c.replace(/'/g, "")}')">${thumbHtml}${c}</button>`;
+  }).join("");
+
+  const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
+  const filtered = state.products.filter(p => {
+    const matchCat = state.selectedCategory === "All" || canonicalCatKey(p.category) === canonicalCatKey(state.selectedCategory);
+    const matchQ = !q || (p.name || "").toLowerCase().includes(q) || (p.brand || "").toLowerCase().includes(q) || (p.category || "").toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+
+function renderStudioSvgForProductPC(p) {
+  const cat = String(p.category || "Mobile").toLowerCase();
+  const brand = String(p.brand || "Saraswti").toUpperCase();
+  const catLabel = String(p.category || "Electronics").toUpperCase();
+  let art = "";
+  if (cat.includes("mobile") || cat.includes("phone")) {
+    art = `
+      <rect x="82" y="16" width="76" height="132" rx="14" fill="#1A2332" />
+      <rect x="86" y="20" width="68" height="124" rx="11" fill="url(#scrGrad)" />
+      <rect x="92" y="28" width="26" height="38" rx="6" fill="rgba(255,255,255,0.22)" />
+      <circle cx="105" cy="36" r="4.5" fill="#0D1B2A" />
+      <circle cx="105" cy="47" r="4.5" fill="#0D1B2A" />
+      <circle cx="105" cy="58" r="4.5" fill="#0D1B2A" />
+      <circle cx="120" cy="26" r="3" fill="#0B132B" />
+      <text x="120" y="96" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="900">5G AMOLED</text>
+    `;
+  } else if (cat.includes("charger") || cat.includes("adapter")) {
+    art = `
+      <rect x="104" y="20" width="7" height="24" rx="3" fill="#90A4AE" />
+      <rect x="129" y="20" width="7" height="24" rx="3" fill="#90A4AE" />
+      <rect x="82" y="42" width="76" height="84" rx="16" fill="#FFFFFF" stroke="#0D47A1" stroke-width="3.5" />
+      <rect x="98" y="72" width="44" height="24" rx="7" fill="#FF6D00" />
+      <text x="120" y="88" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="900">FAST W</text>
+    `;
+  } else if (cat.includes("neckband")) {
+    art = `
+      <path d="M 78 120 A 46 46 0 1 1 162 120" fill="none" stroke="#1A2332" stroke-width="9" stroke-linecap="round" />
+      <circle cx="84" cy="128" r="11" fill="#0D47A1" />
+      <circle cx="156" cy="128" r="11" fill="#0D47A1" />
+    `;
+  } else if (cat.includes("airdrop") || cat.includes("earphone") || cat.includes("tws")) {
+    art = `
+      <circle cx="98" cy="52" r="16" fill="#0D47A1" />
+      <circle cx="142" cy="52" r="16" fill="#0D47A1" />
+      <rect x="74" y="56" width="92" height="72" rx="26" fill="#FFFFFF" stroke="#0D47A1" stroke-width="3.5" />
+      <circle cx="120" cy="94" r="5" fill="#00C853" />
+    `;
+  } else {
+    art = `
+      <rect x="80" y="22" width="80" height="122" rx="16" fill="#E3F2FD" stroke="#0D47A1" stroke-width="3.5" />
+      <line x1="92" y1="120" x2="148" y2="46" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" />
+      <circle cx="120" cy="84" r="22" fill="none" stroke="#0D47A1" stroke-width="3.5" />
+    `;
+  }
+  return `<svg viewBox="0 0 240 176" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="scrGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#0D47A1"/>
+        <stop offset="55%" stop-color="#00B0FF"/>
+        <stop offset="100%" stop-color="#FF6D00"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="120" cy="148" rx="48" ry="8" fill="rgba(13,71,161,0.14)" />
+    ${art}
+    <rect x="116" y="148" width="116" height="22" rx="11" fill="#0D47A1" />
+    <text x="174" y="162" text-anchor="middle" fill="#FFFFFF" font-size="9" font-weight="800">${catLabel.slice(0, 10)} • ${brand.slice(0, 8)}</text>
+  </svg>`;
+}
+
+  document.getElementById("productsGrid").innerHTML = filtered.map(p => {
+    const hasImg = p.imageUri && (p.imageUri.startsWith("data:image") || p.imageUri.startsWith("http"));
+    const imgHtml = hasImg
+      ? `<img src="${p.imageUri}" alt="${p.name}" />`
+      : renderStudioSvgForProductPC(p);
+    const selQty = (state.cardQtyMap && state.cardQtyMap[p.id]) ? state.cardQtyMap[p.id] : 1;
+    return `
+      <div class="card">
+        <div>
+          <div class="prod-img">
+            <span class="disc-badge">${p.discountPercent || 15}% OFF</span>
+            ${imgHtml}
+          </div>
+          <div style="font-size:11px;font-weight:800;color:var(--saffron);text-transform:uppercase;">${p.brand} • ${p.category}</div>
+          <h4 style="margin:4px 0;font-size:15px;">${p.name}</h4>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">${p.specs || ''}</div>
+        </div>
+        <div>
+          <div class="price-row">
+            <span class="sell-price">₹${Number(p.sellingPrice * selQty).toLocaleString('en-IN')}</span>
+            <span class="mrp-price">₹${Number(p.mrpPrice * selQty).toLocaleString('en-IN')}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:#EEF3FB;padding:5px 10px;border-radius:10px;margin-bottom:8px;">
+            <span style="font-size:12px;font-weight:800;color:var(--muted);">Buy Qty:</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button class="btn btn-blue" style="padding:2px 9px;border-radius:50px;" onclick="changeCardQty(${p.id}, -1)">−</button>
+              <strong style="font-size:14px;">${selQty}</strong>
+              <button class="btn btn-saffron" style="padding:2px 9px;border-radius:50px;" onclick="changeCardQty(${p.id}, 1)">+</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-blue" style="flex:1;justify-content:center;" onclick="addToCart(${p.id}, ${selQty})">+ Cart (${selQty})</button>
+            <button class="btn btn-saffron" style="flex:1;justify-content:center;" onclick="buyNow(${p.id}, ${selQty})">Buy (${selQty})</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function changeCardQty(pid, delta) {
+  if (!state.cardQtyMap) state.cardQtyMap = {};
+  const p = state.products.find(x => x.id === pid);
+  const maxStock = p && p.stock > 0 ? p.stock : 99;
+  const cur = state.cardQtyMap[pid] || 1;
+  state.cardQtyMap[pid] = Math.max(1, Math.min(maxStock, cur + delta));
+  renderHome();
+}
+
+function bookLiveFeature(featureTitle) {
+  const model = prompt("Enter your Mobile Brand & Model for '" + featureTitle + "':", "Samsung / Vivo / Redmi");
+  if (!model) return;
+  const notes = prompt("Enter requirement / issue / exchange details:", "Need instant service") || "";
+  const order = {
+    orderNumber: "SRV-" + Math.floor(1000 + Math.random() * 9000),
+    userId: 1,
+    itemsSummary: "✨ Live Feature Request: " + featureTitle + "\n• Device: " + model + "\n• Notes: " + notes,
+    itemCount: 1,
+    subtotalAmount: 0,
+    discountAmount: 0,
+    couponCode: "SERVICE",
+    couponDiscount: 0,
+    totalAmount: 0,
+    paymentMethod: "Store Service / Booking",
+    paymentReference: featureTitle,
+    customerName: state.currentUser ? state.currentUser.fullName : "Customer",
+    customerPhone: state.currentUser ? state.currentUser.phone : "",
+    deliveryAddress: state.currentUser ? state.currentUser.city : "Store Visit",
+    status: "Service Requested",
+    createdAt: Date.now()
+  };
+  state.orders.unshift(order);
+  saveLocalState();
+  updateNavVisibility();
+  postLiveEvent({
+    act: "order", ono: order.orderNumber, uid: 1, sum: order.itemsSummary, cnt: 1,
+    sub: 0, disc: 0, code: "SERVICE", cdisc: 0, tot: 0, pm: order.paymentMethod,
+    pref: order.paymentReference, cname: order.customerName, cph: order.customerPhone,
+    addr: order.deliveryAddress, st: order.status, ts: order.createdAt
+  });
+  showToast("✅ Request sent to Saraswti Mobile Admin Panel!");
+}
+
+function addToCart(pid, qtyDelta = 1) {
+  const p = state.products.find(x => x.id === pid);
+  if (!p) return;
+  const ex = state.cart.find(x => x.id === pid);
+  if (ex) ex.qty += qtyDelta; else state.cart.push({ id: pid, qty: qtyDelta });
+  saveLocalState();
+  updateNavVisibility();
+  showToast("🛒 Added " + qtyDelta + " × " + p.name + " to Cart");
+}
+
+function changeCartItemQty(pid, delta) {
+  const idx = state.cart.findIndex(x => x.id === pid);
+  if (idx < 0) return;
+  state.cart[idx].qty += delta;
+  if (state.cart[idx].qty <= 0) state.cart.splice(idx, 1);
+  saveLocalState();
+  updateNavVisibility();
+  renderCart();
+}
+
+function buyNow(pid, qtyDelta = 1) {
+  addToCart(pid, qtyDelta);
+  showScreen("cart");
+}
+
+function renderCart() {
+  const box = document.getElementById("cartContent");
+  if (state.cart.length === 0) {
+    box.innerHTML = `<div class="card"><p>Your cart is empty.</p><button class="btn btn-blue" onclick="showScreen('home')">Browse Products</button></div>`;
+    return;
+  }
+  let total = 0;
+  const rows = state.cart.map(item => {
+    const p = state.products.find(x => x.id === item.id);
+    if (!p) return "";
+    const sub = p.sellingPrice * item.qty;
+    total += sub;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px;">
+      <div style="flex:1;"><strong>${p.name}</strong><br/><span style="font-size:12px;color:var(--muted);">₹${p.sellingPrice} each</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="btn btn-blue" style="padding:3px 10px;border-radius:50px;" onclick="changeCartItemQty(${p.id}, -1)">−</button>
+        <strong style="font-size:15px;">${item.qty}</strong>
+        <button class="btn btn-saffron" style="padding:3px 10px;border-radius:50px;" onclick="changeCartItemQty(${p.id}, 1)">+</button>
+      </div>
+      <div style="font-weight:800;color:var(--blue);min-width:80px;text-align:right;">₹${sub.toLocaleString('en-IN')}</div>
+    </div>`;
+  }).join("");
+
+  box.innerHTML = `
+    <div class="card">
+      ${rows}
+      <h3 style="text-align:right;color:var(--blue);">Total Payable: ₹${total.toLocaleString('en-IN')}</h3>
+      <div class="field"><label>Delivery Full Address</label><input type="text" id="chkAddr" value="${state.currentUser?.city || ''}" placeholder="House, Road, Area, Pincode" /></div>
+      <div class="field"><label>Payment Method</label>
+        <select id="chkPay"><option>Cash on Delivery (COD)</option><option>UPI Instant Pay</option></select>
+      </div>
+      <button class="btn btn-green" style="width:100%;justify-content:center;padding:14px;font-size:15px;" onclick="placeComputerOrder(${total})">✅ Confirm & Place Live Order</button>
+    </div>
+  `;
+}
+
+function placeComputerOrder(total) {
+  const addr = document.getElementById("chkAddr").value.trim() || "Local Delivery";
+  const pm = document.getElementById("chkPay").value;
+  const summary = state.cart.map(i => {
+    const p = state.products.find(x => x.id === i.id);
+    return p ? `• ${p.name} × ${i.qty} (₹${p.sellingPrice * i.qty})` : "";
+  }).filter(Boolean).join("\n");
+
+  const order = {
+    orderNumber: "SM-" + Math.floor(1000 + Math.random() * 9000),
+    userId: 1,
+    itemsSummary: summary,
+    itemCount: state.cart.reduce((s, i) => s + i.qty, 0),
+    subtotalAmount: total,
+    discountAmount: 0,
+    couponCode: "",
+    couponDiscount: 0,
+    totalAmount: total,
+    paymentMethod: pm,
+    paymentReference: "Computer Order",
+    customerName: state.currentUser?.fullName || "Customer",
+    customerPhone: state.currentUser?.phone || "",
+    deliveryAddress: addr,
+    status: "Order Placed",
+    createdAt: Date.now()
+  };
+  state.orders.unshift(order);
+  state.cart = [];
+  saveLocalState();
+  updateNavVisibility();
+  postLiveEvent({
+    act: "order", ono: order.orderNumber, uid: 1, sum: order.itemsSummary, cnt: order.itemCount,
+    sub: total, disc: 0, code: "", cdisc: 0, tot: total, pm: order.paymentMethod,
+    pref: order.paymentReference, cname: order.customerName, cph: order.customerPhone,
+    addr: order.deliveryAddress, st: order.status, ts: order.createdAt
+  });
+  showScreen("orders");
+  showToast("🎉 Order " + order.orderNumber + " Placed & Synced to Mobile Admin!");
+}
+
+function renderOrders() {
+  const box = document.getElementById("ordersContent");
+  if (state.orders.length === 0) {
+    box.innerHTML = `<div class="card"><p>No orders yet.</p></div>`;
+    return;
+  }
+  box.innerHTML = state.orders.map(o => `
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;">
+        <strong>Order #${o.orderNumber}</strong>
+        <span style="background:#E8F5E9;color:#1B5E20;padding:4px 10px;border-radius:50px;font-size:12px;font-weight:800;">${o.status}</span>
+      </div>
+      <pre style="white-space:pre-wrap;font-size:13px;margin:8px 0;">${o.itemsSummary}</pre>
+      <div style="font-size:12px;color:var(--muted);">Customer: ${o.customerName} (${o.customerPhone}) • Address: ${o.deliveryAddress}</div>
+      <div style="font-weight:800;color:var(--blue);margin-top:6px;">Total: ₹${Number(o.totalAmount).toLocaleString('en-IN')} (${o.paymentMethod})</div>
+    </div>
+  `).join("");
+}
+
+function switchAdminTab(idx) {
+  [0, 1, 2, 3].forEach(i => {
+    document.getElementById("adminTabContent" + i).style.display = (i === idx) ? "block" : "none";
+    document.getElementById("admTab" + i).className = (i === idx) ? "pill active" : "pill";
+  });
+}
+
+function handleComputerPhotoPick(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      const maxDim = 800;
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+        else { w = Math.round(w * (maxDim / h)); h = maxDim; }
+      }
+      canvas.width = Math.max(1, w); canvas.height = Math.max(1, h);
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataUri = canvas.toDataURL("image/jpeg", 0.90);
+      state.pickedImageDataUri = dataUri;
+      document.getElementById("pPreviewImg").src = dataUri;
+
+      // Auto-detect Category Name from selected image if filename has a category keyword
+      const curCat = (document.getElementById("pCat").value || "").trim();
+      const autoCat = detectSmartCategoryNamePC(file.name, curCat);
+      if (autoCat) {
+        document.getElementById("pCat").value = autoCat;
+        addOrUpdateCategoryWithImagePC(autoCat, dataUri, true);
+      }
+      showToast("✅ HD Photo ready for '" + (autoCat || "Product") + "'!");
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+let targetCategoryForImagePC = "";
+
+function triggerCategoryAutoImagePickPC(targetCatName) {
+  targetCategoryForImagePC = targetCatName || "";
+  const input = document.getElementById("catAutoImageFileInput");
+  if (input) {
+    input.value = "";
+    input.click();
+  }
+}
+
+function detectSmartCategoryNamePC(fileName, typedHint) {
+  if (typedHint && typedHint.trim()) {
+    return typedHint.trim().replace(/\s+/g, " ");
+  }
+  const rawLower = String(fileName || "").toLowerCase();
+  const keywordMap = [
+    [["smartwatch", "smart watch", "watch", "band", "fitbit"], "Smartwatch"],
+    [["pendrive", "pen drive", "flash drive", "usb drive", "sandisk", "cruzer"], "Pendrive"],
+    [["memory", "sdcard", "sd card", "microsd", "tf card"], "Memory Card"],
+    [["otg", "type c to", "converter", "connector"], "OTG Adapter"],
+    [["cover", "back cover", "case", "pouch", "silicon"], "Mobile Cover"],
+    [["tempered", "glass", "11d", "9h", "gorilla", "protector", "matte"], "Tempered Glass"],
+    [["neckband", "rockerz", "collar"], "Neckband"],
+    [["airdrop", "airpod", "earbud", "buds", "tws", "nord buds"], "Airdrop"],
+    [["earphone", "wired", "bassheads", "handsfree"], "Earphone"],
+    [["headphone", "headset", "over ear", "gaming"], "Headphone"],
+    [["speaker", "soundbar", "stone", "partybox", "subwoofer"], "Bluetooth Speaker"],
+    [["charger", "adapter", "supervooc", "vooc", "fast charge", "pd "], "Charger"],
+    [["cable", "cord", "type-c", "type c", "lightning", "micro usb"], "USB Data Cable"],
+    [["powerbank", "power bank", "10000mah", "20000mah"], "Power Bank"],
+    [["stand", "holder", "mount"], "Mobile Stand"],
+    [["ring light", "tripod", "selfie", "gimbal"], "Ring Light & Tripod"],
+    [["mic", "microphone", "boya", "collar mic"], "Wireless Mic"],
+    [["mouse"], "Wireless Mouse"],
+    [["keyboard"], "Keyboard"],
+    [["battery"], "Mobile Battery"],
+    [["display", "folder", "lcd", "combo"], "Mobile Display"],
+    [["fan", "cooler"], "Cooling Fan"],
+    [["light", "led", "bulb", "torch"], "LED Light"],
+    [["sim", "jio", "airtel", "recharge"], "SIM & Recharge"],
+    [["camera", "cctv", "webcam"], "Smart Camera"],
+    [["router", "wifi", "dongle", "modem"], "WiFi Router"],
+    [["tablet", "ipad", "tab"], "Tablet"],
+    [["mobile", "phone", "5g", "samsung", "redmi", "vivo", "oppo", "realme", "iphone", "poco", "iqoo", "nokia"], "Mobile"]
+  ];
+  for (const [keywords, label] of keywordMap) {
+    if (keywords.some(k => rawLower.includes(k))) return label;
+  }
+  const withoutExt = String(fileName || "").replace(/\.[^/.]+$/, "");
+  const noise = new Set(["img", "dsc", "pxl", "screenshot", "whatsapp", "image", "photo", "video", "at", "pm", "am", "jpeg", "jpg", "png", "webp", "download", "images", "pic", "picture", "file", "document", "media", "camera", "scaled", "new", "item", "product"]);
+  const words = withoutExt.replace(/[^a-zA-Z]+/g, " ").trim().split(/\s+/).filter(w => w.length >= 3 && !noise.has(w.toLowerCase()));
+  if (words.length > 0) {
+    return words.slice(0, 2).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
+  }
+  const existingKeys = new Set(getEffectiveCategoriesPC().map(c => canonicalCatKey(c)));
+  const candidates = ["Smartwatch", "Pendrive", "Memory Card", "OTG Adapter", "Mobile Stand", "Wireless Mic", "Ring Light", "Headphone", "Gaming Accessories", "Cooling Fan", "Mobile Battery", "Smart Camera", "WiFi Router", "Car Charger", "Keypad Phone"];
+  for (const cand of candidates) {
+    if (!existingKeys.has(canonicalCatKey(cand))) return cand;
+  }
+  return "Smart Accessories " + getEffectiveCategoriesPC().length;
+}
+
+function handleCategoryAutoImagePickPC(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const typedQ = (document.getElementById("quickNewCatInput")?.value || "").trim() || (document.getElementById("tab3NewCatInput")?.value || "").trim();
+  const hint = targetCategoryForImagePC || typedQ;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      const maxDim = 220;
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+        else { w = Math.round(w * (maxDim / h)); h = maxDim; }
+      }
+      canvas.width = Math.max(1, w); canvas.height = Math.max(1, h);
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const thumbUri = canvas.toDataURL("image/jpeg", 0.85);
+      const autoName = detectSmartCategoryNamePC(file.name, hint);
+      addOrUpdateCategoryWithImagePC(autoName, thumbUri, false);
+      if (document.getElementById("quickNewCatInput")) document.getElementById("quickNewCatInput").value = "";
+      if (document.getElementById("tab3NewCatInput")) document.getElementById("tab3NewCatInput").value = "";
+      targetCategoryForImagePC = "";
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function addOrUpdateCategoryWithImagePC(rawCat, thumbUri, silentToast) {
+  const clean = String(rawCat || "").trim().replace(/\s+/g, " ");
+  if (!clean) return;
+  const key = canonicalCatKey(clean);
+  const cfg = state.storeConfig;
+  if (!cfg.categoryImages) cfg.categoryImages = {};
+  if (thumbUri) {
+    Object.keys(cfg.categoryImages).forEach(k => {
+      if (canonicalCatKey(k) === key) delete cfg.categoryImages[k];
+    });
+    cfg.categoryImages[clean] = thumbUri;
+  }
+  const activeKeys = new Set(getEffectiveCategoriesPC().map(c => canonicalCatKey(c)));
+  cfg.deletedCategories = (cfg.deletedCategories || []).filter(c => canonicalCatKey(c) !== key);
+  if (!activeKeys.has(key)) {
+    const isDefault = DEFAULT_BASE_CATEGORIES.some(c => canonicalCatKey(c) === key);
+    if (!isDefault) {
+      cfg.customCategories = [...(cfg.customCategories || []), clean];
+    }
+  }
+  broadcastConfigLivePC();
+  renderAdmin();
+  renderHome();
+  if (!silentToast) {
+    showToast("✅ Image থেকে অটোমেটিক '" + clean + "' ক্যাটাগরি ও ছবি অ্যাড হয়ে গেছে!");
+  }
+}
+
+function saveAdminProduct() {
+  const editId = parseInt(document.getElementById("editProdId").value || "0", 10);
+  const brand = document.getElementById("pBrand").value.trim() || "Saraswti";
+  const category = document.getElementById("pCat").value.trim() || "Mobile";
+  let name = document.getElementById("pName").value.trim() || (brand + " " + category);
+  if (editId === 0 && state.products.some(p => (p.name || "").toLowerCase() === name.toLowerCase())) {
+    name = name + " #" + (state.products.length + 1);
+  }
+  const mrpPrice = parseInt(document.getElementById("pMrp").value || "999", 10);
+  const sellingPrice = parseInt(document.getElementById("pSell").value || "799", 10);
+  const stock = parseInt(document.getElementById("pStock").value || "10", 10);
+  const offerTag = document.getElementById("pTag").value.trim() || "Special Deal";
+  const specs = document.getElementById("pSpecs").value.trim();
+  const urlImg = document.getElementById("pImageUrl").value.trim();
+  const imageUri = state.pickedImageDataUri || urlImg || "";
+  const discountPercent = mrpPrice > sellingPrice ? Math.round(((mrpPrice - sellingPrice) * 100) / mrpPrice) : 10;
+
+  const prod = {
+    id: editId > 0 ? editId : Date.now(),
+    name, brand, category, mrpPrice, sellingPrice, discountPercent, stock,
+    specs, warranty: "1 Year Official Warranty", description: specs, offerTag,
+    accentColorHex: 0xFF0D47A1, imageUri
+  };
+
+  if (editId > 0) {
+    const existingIdx = state.products.findIndex(p => p.id === editId);
+    if (existingIdx >= 0) state.products[existingIdx] = prod;
+    else state.products.unshift(prod);
+  } else {
+    state.products.unshift(prod);
+  }
+
+  state.selectedCategory = "All";
+  if (document.getElementById("searchInput")) document.getElementById("searchInput").value = "";
+  state.pickedImageDataUri = "";
+  document.getElementById("editProdId").value = "0";
+  document.getElementById("pName").value = "";
+  saveLocalState();
+  renderAdmin();
+  renderHome();
+
+  postLiveEvent({
+    act: "upsert", id: prod.id, n: prod.name, b: prod.brand, c: prod.category,
+    m: prod.mrpPrice, s: prod.sellingPrice, d: prod.discountPercent, st: prod.stock,
+    sp: prod.specs, w: prod.warranty, desc: prod.description, tag: prod.offerTag,
+    col: 0xFF0D47A1, img: prod.imageUri
+  });
+  showToast("🚀 '" + prod.name + "' uploaded! Showing all " + state.products.length + " products live!");
+}
+
+function editAdminProduct(id) {
+  const p = state.products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById("editProdId").value = p.id;
+  document.getElementById("pName").value = p.name;
+  document.getElementById("pBrand").value = p.brand;
+  document.getElementById("pCat").value = p.category;
+  document.getElementById("pMrp").value = p.mrpPrice;
+  document.getElementById("pSell").value = p.sellingPrice;
+  document.getElementById("pStock").value = p.stock;
+  document.getElementById("pTag").value = p.offerTag || "";
+  document.getElementById("pSpecs").value = p.specs || "";
+  state.pickedImageDataUri = p.imageUri || "";
+  document.getElementById("pPreviewImg").src = p.imageUri || "";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function deleteAdminProduct(id) {
+  const p = state.products.find(x => x.id === id);
+  if (!p) return;
+  state.products = state.products.filter(x => x.id !== id);
+  saveLocalState();
+  renderAdmin();
+  postLiveEvent({ act: "delete", n: p.name });
+  showToast("🗑️ Deleted " + p.name + " from all devices");
+}
+
+const DEFAULT_BASE_CATEGORIES = ["All", "Mobile", "Charger", "USB Data Cable", "Earphone", "Neckband", "Airdrop", "Bluetooth Speaker", "Power Bank", "Mobile Cover", "Tempered Glass"];
+
+function canonicalCatKey(raw) {
+  const clean = String(raw || "").trim().replace(/\s+/g, " ").toLowerCase();
+  return clean.length > 4 && clean.endsWith("s") ? clean.slice(0, -1) : clean;
+}
+
+function getEffectiveCategoriesPC() {
+  const cfg = state.storeConfig || {};
+  const delSet = new Set((cfg.deletedCategories || []).map(x => canonicalCatKey(x)));
+  const seen = new Set();
+  const res = [];
+  function addUnique(raw) {
+    if (!raw) return;
+    const clean = String(raw).trim().replace(/\s+/g, " ");
+    if (!clean) return;
+    const k = canonicalCatKey(clean);
+    if (k !== "all" && delSet.has(k)) return;
+    if (!seen.has(k)) {
+      seen.add(k);
+      res.push(clean);
+    }
+  }
+  DEFAULT_BASE_CATEGORIES.forEach(c => addUnique(c));
+  (cfg.customCategories || []).forEach(c => addUnique(c));
+  (state.products || []).forEach(p => addUnique(p.category));
+  return res;
+}
+
+function broadcastConfigLivePC() {
+  const cfg = state.storeConfig;
+  saveLocalState();
+  postLiveEvent({
+    act: "config",
+    cfg: {
+      ae: cfg.announcementEnabled, at: cfg.announcementText,
+      htag: cfg.heroTag, htit: cfg.heroTitle, hsub: cfg.heroSubtitle,
+      wa: "919876543210", cats: cfg.customCategories || [],
+      delCats: cfg.deletedCategories || [],
+      catImgs: cfg.categoryImages || {},
+      featImgs: cfg.featureImages || {},
+      rep: cfg.enableRepairBooking, exch: cfg.enablePhoneExchange,
+      emi: cfg.enableEmiFeature, fdeal: cfg.enableFlashDeal,
+      ftxt: cfg.flashDealText, feats: cfg.customFeatures || [],
+      otaUrl: "", otaMsg: ""
+    }
+  });
+}
+
+function addCategoryInstantPC(inputId) {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  const clean = el.value.trim().replace(/\s+/g, " ");
+  if (!clean) return;
+  const key = canonicalCatKey(clean);
+  const activeKeys = new Set(getEffectiveCategoriesPC().map(c => canonicalCatKey(c)));
+  if (activeKeys.has(key)) {
+    showToast("⚠️ '" + clean + "' category already exists! Duplicate not added.");
+    el.value = "";
+    return;
+  }
+  const cfg = state.storeConfig;
+  cfg.deletedCategories = (cfg.deletedCategories || []).filter(c => canonicalCatKey(c) !== key);
+  const isDefault = DEFAULT_BASE_CATEGORIES.some(c => canonicalCatKey(c) === key);
+  if (!isDefault) {
+    cfg.customCategories = [...(cfg.customCategories || []), clean];
+  }
+  el.value = "";
+  broadcastConfigLivePC();
+  renderAdmin();
+  renderHome();
+  showToast("✅ Category '" + clean + "' added & auto-synced to all Mobile & PC apps!");
+}
+
+function deleteCategoryInstantPC(catName) {
+  const clean = String(catName || "").trim().replace(/\s+/g, " ");
+  if (!clean || clean.toLowerCase() === "all") return;
+  const key = canonicalCatKey(clean);
+  const cfg = state.storeConfig;
+  cfg.customCategories = (cfg.customCategories || []).filter(c => canonicalCatKey(c) !== key);
+  if (cfg.categoryImages) {
+    Object.keys(cfg.categoryImages).forEach(k => {
+      if (canonicalCatKey(k) === key) delete cfg.categoryImages[k];
+    });
+  }
+  const delList = cfg.deletedCategories || [];
+  if (!delList.some(c => canonicalCatKey(c) === key)) {
+    delList.push(clean);
+  }
+  cfg.deletedCategories = delList;
+  if (canonicalCatKey(state.selectedCategory) === key) {
+    state.selectedCategory = "All";
+  }
+  broadcastConfigLivePC();
+  renderAdmin();
+  renderHome();
+  showToast("🗑️ Category '" + clean + "' deleted & auto-synced to all apps!");
+}
+
+function restoreDefaultCategoriesPC() {
+  state.storeConfig.deletedCategories = [];
+  broadcastConfigLivePC();
+  renderAdmin();
+  renderHome();
+  showToast("✅ All default categories restored & synced!");
+}
+
+let pendingImageTargetFeaturePC = "";
+
+function triggerFeatureAutoImagePickPC(targetFeatName) {
+  pendingImageTargetFeaturePC = targetFeatName || "";
+  const fileEl = document.getElementById("featAutoImageFileInput");
+  if (fileEl) {
+    fileEl.value = "";
+    fileEl.click();
+  }
+}
+
+function getActiveFeaturesListPC() {
+  const cfg = state.storeConfig || {};
+  const list = [];
+  if (cfg.enableRepairBooking) list.push("🛠️ 30-Min Mobile Repair");
+  if (cfg.enablePhoneExchange) list.push("🔄 Old Phone Exchange");
+  if (cfg.enableEmiFeature) list.push("💳 0% Downpayment EMI");
+  (cfg.customFeatures || []).forEach(f => {
+    if (f && f.trim() && !list.some(x => x.toLowerCase() === f.trim().toLowerCase())) {
+      list.push(f.trim());
+    }
+  });
+  return list;
+}
+
+function handleFeatureAutoImagePickPC(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const q1 = document.getElementById("quickNewFeatInput");
+  const q2 = document.getElementById("tab3NewFeatInput");
+  const typedHint = (pendingImageTargetFeaturePC || (q1 && q1.value.trim()) || (q2 && q2.value.trim()) || "").trim();
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      const maxDim = 220;
+      const scale = Math.min(maxDim / img.width, maxDim / img.height, 1);
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const thumbDataUri = canvas.toDataURL("image/jpeg", 0.85);
+      let detectedName = typedHint;
+      if (!detectedName) {
+        const rawBase = String(file.name || "").replace(/\.[^/.]+$/, "").toLowerCase();
+        if (rawBase.includes("repair") || rawBase.includes("fix") || rawBase.includes("service")) detectedName = "🛠️ 30-Min Mobile Repair";
+        else if (rawBase.includes("exchange") || rawBase.includes("swap") || rawBase.includes("old")) detectedName = "🔄 Old Phone Exchange";
+        else if (rawBase.includes("emi") || rawBase.includes("loan") || rawBase.includes("finance")) detectedName = "💳 0% Downpayment EMI";
+        else if (rawBase.includes("delivery") || rawBase.includes("home")) detectedName = "🚚 Same-Day Home Delivery";
+        else if (rawBase.includes("sim") || rawBase.includes("5g")) detectedName = "📡 5G SIM Activation";
+        else if (rawBase.includes("screen") || rawBase.includes("glass")) detectedName = "🛡️ Screen Protection Plan";
+        else {
+          const cleaned = rawBase
+            .replace(/^(img|dsc|pxl|screenshot|whatsapp|image|photo|pic)[_\-\s]*/gi, "")
+            .replace(/\b\d+\b/g, " ")
+            .replace(/[_\-]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+          if (cleaned.length >= 2 && /[a-zA-Z]/.test(cleaned)) {
+            detectedName = "✨ " + cleaned.split(" ").slice(0, 3).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+          } else {
+            detectedName = "✨ Special Store Service " + (getActiveFeaturesListPC().length + 1);
+          }
+        }
+      }
+      addOrUpdateFeatureWithImagePC(detectedName, thumbDataUri);
+      if (q1) q1.value = "";
+      if (q2) q2.value = "";
+      pendingImageTargetFeaturePC = "";
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function addOrUpdateFeatureWithImagePC(rawFeat, thumbUri) {
+  const clean = String(rawFeat || "").trim().replace(/\s+/g, " ");
+  if (!clean) return;
+  const cfg = state.storeConfig;
+  if (!cfg.featureImages) cfg.featureImages = {};
+  if (thumbUri) {
+    Object.keys(cfg.featureImages).forEach(k => {
+      if (k.trim().toLowerCase() === clean.toLowerCase()) delete cfg.featureImages[k];
+    });
+    cfg.featureImages[clean] = thumbUri;
+  }
+  const curList = cfg.customFeatures || [];
+  if (!curList.some(f => f.trim().toLowerCase() === clean.toLowerCase())) {
+    curList.push(clean);
+  }
+  cfg.customFeatures = curList;
+  const lower = clean.toLowerCase();
+  if (lower.includes("repair")) cfg.enableRepairBooking = true;
+  if (lower.includes("exchange")) cfg.enablePhoneExchange = true;
+  if (lower.includes("emi")) cfg.enableEmiFeature = true;
+  broadcastConfigLivePC();
+  renderAdmin();
+  renderHome();
+  showToast("🚀 App Feature '" + clean + "' added & auto-synced live (no ZIP download needed)!");
+}
+
+function addAppFeatureInstantPC(inputId) {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  const clean = el.value.trim().replace(/\s+/g, " ");
+  if (!clean) return;
+  el.value = "";
+  addOrUpdateFeatureWithImagePC(clean, "");
+}
+
+function deleteAppFeatureInstantPC(featName) {
+  const clean = String(featName || "").trim();
+  if (!clean) return;
+  const cfg = state.storeConfig;
+  cfg.customFeatures = (cfg.customFeatures || []).filter(f => f.trim().toLowerCase() !== clean.toLowerCase());
+  if (cfg.featureImages) {
+    Object.keys(cfg.featureImages).forEach(k => {
+      if (k.trim().toLowerCase() === clean.toLowerCase()) delete cfg.featureImages[k];
+    });
+  }
+  const lower = clean.toLowerCase();
+  if (lower.includes("30-min mobile repair") || lower.includes("repair")) cfg.enableRepairBooking = false;
+  if (lower.includes("old phone exchange") || lower.includes("exchange")) cfg.enablePhoneExchange = false;
+  if (lower.includes("0% downpayment emi") || lower.includes("emi")) cfg.enableEmiFeature = false;
+  broadcastConfigLivePC();
+  renderAdmin();
+  renderHome();
+  showToast("🗑️ Feature '" + clean + "' removed & auto-synced to all apps!");
+}
+
+function restoreDefaultFeaturesPC() {
+  const cfg = state.storeConfig;
+  cfg.enableRepairBooking = true;
+  cfg.enablePhoneExchange = true;
+  cfg.enableEmiFeature = true;
+  const defaults = ["🛠️ 30-Min Mobile Repair", "🔄 Old Phone Exchange", "💳 0% Downpayment EMI", "🚚 Same-Day Home Delivery"];
+  const cur = cfg.customFeatures || [];
+  defaults.forEach(d => {
+    if (!cur.some(x => x.trim().toLowerCase() === d.toLowerCase())) cur.push(d);
+  });
+  cfg.customFeatures = cur;
+  broadcastConfigLivePC();
+  renderAdmin();
+  renderHome();
+  showToast("✅ Default App Features restored & live-synced!");
+}
+
+function saveAdminLiveConfig() {
+  const cfg = state.storeConfig;
+  cfg.announcementEnabled = document.getElementById("cfgAnnEnabled").checked;
+  cfg.announcementText = document.getElementById("cfgAnnText").value.trim();
+  cfg.enableFlashDeal = document.getElementById("cfgFlashEnabled").checked;
+  cfg.flashDealText = document.getElementById("cfgFlashText").value.trim();
+  cfg.enableRepairBooking = document.getElementById("cfgRepair").checked;
+  cfg.enablePhoneExchange = document.getElementById("cfgExchange").checked;
+  cfg.enableEmiFeature = document.getElementById("cfgEmi").checked;
+  cfg.customFeatures = document.getElementById("cfgFeatures").value.split(",").map(s => s.trim()).filter(Boolean);
+  const rawCats = document.getElementById("cfgCategories").value.split(",").map(s => s.trim().replace(/\s+/g, " ")).filter(Boolean);
+  const baseKeys = new Set(DEFAULT_BASE_CATEGORIES.map(c => canonicalCatKey(c)));
+  const seenCustom = new Set();
+  cfg.customCategories = rawCats.filter(c => {
+    const k = canonicalCatKey(c);
+    if (baseKeys.has(k) || seenCustom.has(k)) return false;
+    seenCustom.add(k);
+    return true;
+  });
+  cfg.heroTag = document.getElementById("cfgHeroTag").value.trim() || "FESTIVE MEGA SALE";
+  cfg.heroTitle = document.getElementById("cfgHeroTitle").value.trim() || "Latest 5G Mobiles";
+  cfg.heroSubtitle = document.getElementById("cfgHeroSub").value.trim();
+
+  broadcastConfigLivePC();
+  renderAdmin();
+  showToast("🚀 Live App Features & Categories updated on all Mobile & Computer apps!");
+}
+
+function renderAdmin() {
+  document.getElementById("adminProductsTable").innerHTML = `
+    <table>
+      <thead><tr><th>Photo</th><th>Product</th><th>Category</th><th>Price (₹)</th><th>Stock</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${state.products.map(p => `
+          <tr>
+            <td>${p.imageUri && (p.imageUri.startsWith("data:") || p.imageUri.startsWith("http")) ? `<img src="${p.imageUri}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;"/>` : "📱"}</td>
+            <td><strong>${p.name}</strong><br/><span style="color:var(--muted);font-size:11px;">${p.brand}</span></td>
+            <td>${p.category}</td>
+            <td><strong style="color:var(--blue);">₹${p.sellingPrice}</strong> <span style="text-decoration:line-through;color:var(--muted);font-size:11px;">₹${p.mrpPrice}</span></td>
+            <td>${p.stock}</td>
+            <td>
+              <button class="btn btn-blue" style="padding:5px 10px;font-size:11px;" onclick="editAdminProduct(${p.id})">✏️ Edit</button>
+              <button class="btn btn-danger" style="padding:5px 10px;font-size:11px;" onclick="deleteAdminProduct(${p.id})">🗑️ Delete</button>
+            </td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  document.getElementById("adminTabContent1").innerHTML = state.orders.length === 0
+    ? `<div class="card"><p>No orders received yet.</p></div>`
+    : state.orders.map(o => `
+      <div class="card" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <strong>#${o.orderNumber} — ${o.customerName} (+91 ${o.customerPhone})</strong>
+          <span style="font-weight:800;color:var(--green);">${o.status}</span>
+        </div>
+        <pre style="white-space:pre-wrap;font-size:12px;">${o.itemsSummary}</pre>
+        <div style="font-size:12px;color:var(--muted);">Address: ${o.deliveryAddress} | Total: ₹${o.totalAmount}</div>
+      </div>
+    `).join("");
+
+  document.getElementById("adminTabContent2").innerHTML = `
+    <table>
+      <thead><tr><th>Name</th><th>Mobile</th><th>Email</th><th>City</th><th>Role</th></tr></thead>
+      <tbody>
+        ${state.users.map(u => `
+          <tr><td><strong>${u.fullName}</strong></td><td>+91 ${u.phone}</td><td>${u.email}</td><td>${u.city}</td><td>${u.isAdmin ? "Admin" : "Customer"}</td></tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  const cfg = state.storeConfig;
+  const catImgs = cfg.categoryImages || {};
+  const activeCats = getEffectiveCategoriesPC().filter(c => c.toLowerCase() !== "all");
+  const chipsHtml = activeCats.map(c => {
+    const safe = c.replace(/'/g, "");
+    const k = canonicalCatKey(c);
+    const imgKey = Object.keys(catImgs).find(x => canonicalCatKey(x) === k);
+    const imgUri = imgKey ? catImgs[imgKey] : "";
+    const thumbHtml = imgUri
+      ? `<img src="${imgUri}" alt="${safe}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;" />`
+      : `<span style="font-size:13px;">📂</span>`;
+    return `<span style="display:inline-flex;align-items:center;gap:6px;background:#EEF3FB;border:1px solid #C5D4F0;color:var(--blue);padding:5px 10px;border-radius:50px;font-size:12px;font-weight:800;">
+      ${thumbHtml}
+      <span style="cursor:pointer;" onclick="document.getElementById('pCat').value='${safe}'">${c}</span>
+      <button type="button" onclick="triggerCategoryAutoImagePickPC('${safe}')" title="Set Category Image" style="border:none;background:#FFF3E0;color:#E65100;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:11px;line-height:1;">📷</button>
+      <button type="button" onclick="deleteCategoryInstantPC('${safe}')" title="Delete Category" style="border:none;background:#FFEBEE;color:#C62828;border-radius:50%;width:22px;height:22px;cursor:pointer;font-weight:900;line-height:1;">✕</button>
+    </span>`;
+  }).join("");
+  const chipsBox0 = document.getElementById("adminActiveCategoriesChips");
+  if (chipsBox0) chipsBox0.innerHTML = chipsHtml;
+  const chipsBox3 = document.getElementById("tab3CategoriesChips");
+  if (chipsBox3) chipsBox3.innerHTML = chipsHtml;
+  const restoreBtn = document.getElementById("restoreDefaultCatsBtn");
+  if (restoreBtn) restoreBtn.style.display = (cfg.deletedCategories && cfg.deletedCategories.length > 0) ? "inline-flex" : "none";
+
+  const featImgs = cfg.featureImages || {};
+  const activeFeats = getActiveFeaturesListPC();
+  const featChipsHtml = activeFeats.map(f => {
+    const safe = f.replace(/'/g, "");
+    const imgKey = Object.keys(featImgs).find(x => x.trim().toLowerCase() === f.trim().toLowerCase());
+    const imgUri = imgKey ? featImgs[imgKey] : "";
+    const thumbHtml = imgUri
+      ? `<img src="${imgUri}" alt="${safe}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;" />`
+      : `<span style="font-size:13px;">✨</span>`;
+    return `<span style="display:inline-flex;align-items:center;gap:6px;background:#E8F5E9;border:1px solid #A5D6A7;color:#1B5E20;padding:5px 10px;border-radius:50px;font-size:12px;font-weight:800;">
+      ${thumbHtml}
+      <span>${f}</span>
+      <button type="button" onclick="triggerFeatureAutoImagePickPC('${safe}')" title="Set Feature Image" style="border:none;background:#FFF3E0;color:#E65100;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:11px;line-height:1;">📷</button>
+      <button type="button" onclick="deleteAppFeatureInstantPC('${safe}')" title="Delete Feature" style="border:none;background:#FFEBEE;color:#C62828;border-radius:50%;width:22px;height:22px;cursor:pointer;font-weight:900;line-height:1;">✕</button>
+    </span>`;
+  }).join("");
+  const fBox0 = document.getElementById("adminActiveFeaturesChips");
+  if (fBox0) fBox0.innerHTML = featChipsHtml;
+  const fBox3 = document.getElementById("tab3FeaturesChips");
+  if (fBox3) fBox3.innerHTML = featChipsHtml;
+
+  document.getElementById("cfgAnnEnabled").checked = cfg.announcementEnabled;
+  document.getElementById("cfgAnnText").value = cfg.announcementText || "";
+  document.getElementById("cfgFlashEnabled").checked = cfg.enableFlashDeal;
+  document.getElementById("cfgFlashText").value = cfg.flashDealText || "";
+  document.getElementById("cfgRepair").checked = cfg.enableRepairBooking;
+  document.getElementById("cfgExchange").checked = cfg.enablePhoneExchange;
+  document.getElementById("cfgEmi").checked = cfg.enableEmiFeature;
+  document.getElementById("cfgFeatures").value = (cfg.customFeatures || []).join(", ");
+  document.getElementById("cfgCategories").value = (cfg.customCategories || []).join(", ");
+  document.getElementById("cfgHeroTag").value = cfg.heroTag || "";
+  document.getElementById("cfgHeroTitle").value = cfg.heroTitle || "";
+  document.getElementById("cfgHeroSub").value = cfg.heroSubtitle || "";
+}
+
+async function postLiveEvent(obj) {
+  // Disabled: anonymous public relay is not suitable for customer/order data.
+  return false;
+}
+
+async function pushAllToCloudNow() {
+  showToast("Cloud sync is disabled until an authenticated backend is configured.");
+}
+
+async function syncFromCloudNow(showMsg) {
+  // Disabled to prevent untrusted public messages from changing products or customer records.
+  if (showMsg) showToast("Cloud sync is disabled until an authenticated backend is configured.");
+}
+
+function applyCloudItem(obj) {
+  const act = obj.act || "upsert";
+  if (act === "delete" && obj.n) {
+    state.products = state.products.filter(p => p.name.toLowerCase() !== obj.n.toLowerCase());
+  } else if (act === "config" && obj.cfg) {
+    const c = obj.cfg;
+    state.storeConfig = {
+      announcementEnabled: c.ae !== false,
+      announcementText: c.at || state.storeConfig.announcementText,
+      heroTag: c.htag || state.storeConfig.heroTag,
+      heroTitle: c.htit || state.storeConfig.heroTitle,
+      heroSubtitle: c.hsub || state.storeConfig.heroSubtitle,
+      customCategories: Array.isArray(c.cats) ? c.cats : [],
+      deletedCategories: Array.isArray(c.delCats) ? c.delCats : (state.storeConfig.deletedCategories || []),
+      categoryImages: (c.catImgs && typeof c.catImgs === "object") ? c.catImgs : (state.storeConfig.categoryImages || {}),
+      featureImages: (c.featImgs && typeof c.featImgs === "object") ? c.featImgs : (state.storeConfig.featureImages || {}),
+      enableRepairBooking: c.rep !== false,
+      enablePhoneExchange: c.exch !== false,
+      enableEmiFeature: c.emi !== false,
+      enableFlashDeal: c.fdeal !== false,
+      flashDealText: c.ftxt || state.storeConfig.flashDealText,
+      customFeatures: Array.isArray(c.feats) ? c.feats : state.storeConfig.customFeatures
+    };
+  } else if (act === "user" && obj.ph) {
+    const u = { fullName: obj.fn || "Customer", phone: obj.ph, email: obj.em || "", password: "", city: obj.ct || "", isAdmin: false };
+    const idx = state.users.findIndex(x => x.phone === u.phone);
+    if (idx >= 0) state.users[idx] = u; else state.users.push(u);
+  } else if (act === "order" && obj.ono) {
+    const o = {
+      orderNumber: obj.ono, userId: obj.uid || 1, itemsSummary: obj.sum || "",
+      itemCount: obj.cnt || 1, totalAmount: obj.tot || 0, paymentMethod: obj.pm || "COD",
+      paymentReference: obj.pref || "", customerName: obj.cname || "Customer",
+      customerPhone: obj.cph || "", deliveryAddress: obj.addr || "",
+      status: obj.st || "Order Placed", createdAt: obj.ts || Date.now()
+    };
+    const idx = state.orders.findIndex(x => x.orderNumber === o.orderNumber);
+    if (idx >= 0) state.orders[idx] = o; else state.orders.unshift(o);
+  } else if (obj.n) {
+    const prod = {
+      id: obj.id || Date.now(), name: obj.n, brand: obj.b || "Saraswti", category: obj.c || "Mobile",
+      mrpPrice: obj.m || obj.s || 999, sellingPrice: obj.s || 999, discountPercent: obj.d || 10,
+      stock: obj.st ?? 10, specs: obj.sp || "", offerTag: obj.tag || "New Arrival", imageUri: obj.img || ""
+    };
+    const idx = state.products.findIndex(p => p.name.toLowerCase() === prod.name.toLowerCase());
+    if (idx >= 0) {
+      if (!prod.imageUri && state.products[idx].imageUri) prod.imageUri = state.products[idx].imageUri;
+      state.products[idx] = prod;
+    } else {
+      state.products.unshift(prod);
+    }
+  }
+}
+
+loadLocalState();
+updateNavVisibility();
+showScreen(state.currentUser ? (state.currentUser.isAdmin ? "admin" : "home") : "auth");
+syncFromCloudNow(false);
+setInterval(() => syncFromCloudNow(false), 3000);
+</script>
+</body>
+</html>
